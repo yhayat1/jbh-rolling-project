@@ -17,6 +17,13 @@ jbh-rolling-project/
 │   ├── app.py             # Containerized Flask application
 │   ├── requirements.txt   # Python dependencies
 │   └── README.md          # Docker documentation
+├── jenkins/               # Jenkins CI/CD environment
+│   ├── docker-compose.yml # Jenkins master and slave setup
+│   ├── Jenkinsfile        # Pipeline configuration
+│   ├── master/            # Jenkins master Dockerfile and scripts
+│   ├── slave/             # Jenkins slave Dockerfile and scripts
+│   ├── casc_configs/      # Configuration as Code files
+│   └── README.md          # Jenkins documentation
 ├── aws/                   # AWS resources and documentation
 │   └── README.md          # AWS resources documentation
 ├── requirements.txt       # Python dependencies (for local development)
@@ -45,7 +52,13 @@ This repository contains multiple DevOps components, each with its own documenta
 - Exposes application on port 5001
 - Supports environment variable configuration
 
-### 4. [AWS Resources](./aws/README.md)
+### 4. [Jenkins CI/CD](./jenkins/README.md)
+- Jenkins master and slave environment
+- Docker-enabled CI/CD pipeline
+- Automated linting, security scanning, and Docker builds
+- Pipeline configuration via Jenkinsfile
+
+### 5. [AWS Resources](./aws/README.md)
 - Screenshots and documentation
 - AWS infrastructure reference materials
 
@@ -95,6 +108,18 @@ terraform plan
 terraform apply
 ```
 
+### Option 4: Run CI/CD Pipeline with Jenkins
+
+See [Jenkins README](./jenkins/README.md) for detailed instructions.
+
+```bash
+# Quick start
+cd jenkins
+docker-compose up -d --build
+# Access Jenkins at http://localhost:8080 (admin/admin1234)
+# Configure credentials and create pipeline job
+```
+
 ## 🏗️ Architecture Overview
 
 ```
@@ -130,7 +155,7 @@ terraform apply
 
 ### Required Tools
 - **Python 3.8+** with `pip` and `venv`
-- **Docker** (for containerized deployment)
+- **Docker** and **Docker Compose** (for containerized deployment and Jenkins)
 - **Terraform >= 1.0** (for infrastructure provisioning)
 - **AWS CLI** (optional, but recommended)
 - **Git** (for cloning the repository)
@@ -154,6 +179,7 @@ Each component has detailed documentation:
 | **Terraform** | Infrastructure as Code | [terraform/aws/README.md](./terraform/aws/README.md) |
 | **Python App** | Local Flask development | [python/README.md](./python/README.md) |
 | **Docker** | Containerized deployment | [docker/README.md](./docker/README.md) |
+| **Jenkins** | CI/CD pipeline environment | [jenkins/README.md](./jenkins/README.md) |
 | **AWS Resources** | Screenshots and docs | [aws/README.md](./aws/README.md) |
 
 ## 🔧 Common Tasks
@@ -204,6 +230,7 @@ $env:AWS_DEFAULT_REGION="your-region"
 - Review component-specific documentation for detailed setup instructions
 - Start with Terraform to provision infrastructure
 - Run the application locally or in Docker
+- Set up Jenkins CI/CD pipeline for automated builds and deployments
 - Explore AWS resources through the web dashboard
 
 ## 📜 License

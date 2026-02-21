@@ -1,0 +1,83 @@
+# Jenkins Pipeline for CI/CD Integration
+
+pipeline {
+    agent any
+    
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+        IMAGE_NAME = 'yossihayat/flask-aws-monitor'
+    }
+    
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git branch: 'main', url: 'https://github.com/yhayat1/jbh-rolling-project.git'
+            }
+        }
+        
+        stage('Parallel Checks') {
+            parallel {
+                stage('Linting') {
+                    steps {
+                        echo "Linting Python code using Flake8..."
+                        sh 'flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics'
+
+                        echo "Linting Shell using ShellCheck..."
+                        sh 'find . -name "*.sh" -type f | xargs shellcheck'
+
+                        echo "Linting Dockerfiles using Hadolint..."
+                        sh 'find . -name "Dockerfile" -type f -exec hadolint {} \;'
+                    }
+                }
+                stage('Security Scan') {
+                    steps {
+                        echo 'Running Bandit security scan for project Python files...'
+                        sh 'bandit -r . -ll -i'
+                    }
+                }
+            }
+        }
+        
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    echo 'Building Docker image...'
+                    sh """
+                    cd docker
+                    docker build -t ${IMAGE_NAME}:latest .
+                    """
+                }
+            }
+        }
+        
+        stage('Trivy Security Scan') {
+            steps {
+                echo 'Running Trivy security scan for Docker image...'
+                sh "trivy image --severity HIGH,CRITICAL --exit-code 1 ${IMAGE_NAME}:latest"
+            }
+        }
+        
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    echo 'Logging in to Docker Hub...'
+                    sh """
+                    echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin
+                    echo 'Pushing Docker image to Docker Hub...'
+                    docker push ${IMAGE_NAME}:latest
+                    """
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed! Check logs for details.'
+        }
+    }
+}
+
