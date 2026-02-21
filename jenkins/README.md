@@ -86,12 +86,19 @@ The configuration is automatically applied when Jenkins starts via the `CASC_JEN
      - Definition: "Pipeline script from SCM"
      - SCM: Git
      - Repository URL: `https://github.com/yhayat1/jbh-rolling-project.git`
-     - Branch: `*/main` (or your branch)
+     - Branch: `*/dev` (the pipeline is configured to use the `dev` branch)
      - Script Path: `jenkins/Jenkinsfile`
    - Save
 
 7. **Run the Pipeline**:
    - Click "Build Now" on your pipeline job
+   - The pipeline will automatically:
+     - Run on the `docker`-labeled slave agent (agent2)
+     - Clone the repository from the `dev` branch
+     - Execute parallel linting and security scanning
+     - Build the Docker image
+     - Scan the image with Trivy
+     - Push to Docker Hub
 
 ## 📝 Pipeline Configuration
 
@@ -101,11 +108,18 @@ Your pipeline configuration is stored in `jenkins/Jenkinsfile`. This file define
 - Docker image building
 - Docker Hub push
 
-**Important**: Before running the pipeline, update the `IMAGE_NAME` in `jenkins/Jenkinsfile` (line 8) to match your Docker Hub username:
+**Important**: Before running the pipeline, update the `IMAGE_NAME` in `jenkins/Jenkinsfile` (line 6) to match your Docker Hub username:
 ```groovy
 IMAGE_NAME = 'your-dockerhub-username/flask-aws-monitor'
 ```
 Replace `your-dockerhub-username` with your actual Docker Hub username.
+
+**Pipeline Behavior**:
+- The pipeline runs on the `docker`-labeled slave agent (not the master)
+- Repository is automatically cloned from the `dev` branch
+- Linting and security scans run in parallel
+- Security scans (Bandit, Trivy) report issues but don't fail the build (for visibility)
+- All stages must complete successfully for the pipeline to be marked as successful
 
 ## ⚙️ Configuration
 
@@ -122,7 +136,7 @@ Replace `your-dockerhub-username` with your actual Docker Hub username.
 - **Labels**: `docker`
 - **Executors**: 8
 - **Docker Access**: Mounts host Docker socket
-- **Base Image**: Ubuntu 22.04 LTS (specific version for reproducibility)
+- **Base Image**: `yanivomc/jenkins-slave:baseline-2.0` (instructor's baseline image with Java 17, Python, Docker, Git)
 - **Pre-installed Tools**:
   - Docker CLI (for building and pushing images)
   - Java (JDK) - required for Jenkins agent connection
@@ -160,6 +174,19 @@ Replace `your-dockerhub-username` with your actual Docker Hub username.
 - **Solution**: Verify credential ID is exactly `dockerhub-credentials` (case-sensitive)
 - **Solution**: Check credentials are in the global scope (System → Global credentials)
 - **Solution**: Ensure credential type is "Username with password"
+
+**Problem**: Pipeline runs on master instead of slave
+- **Solution**: Verify the slave agent is online and has the `docker` label
+- **Solution**: Check Jenkinsfile uses `agent { label 'docker' }` (not `agent any`)
+- **Solution**: Ensure slave container is running: `docker-compose ps jenkins-slave`
+
+**Problem**: Tools not found (flake8, bandit, etc.)
+- **Solution**: Rebuild the slave image: `docker-compose build jenkins-slave && docker-compose restart jenkins-slave`
+- **Solution**: Verify tools are installed: `docker-compose exec jenkins-slave flake8 --version`
+
+**Problem**: Pipeline checks out wrong branch
+- **Solution**: The Jenkinsfile clones from `dev` branch - ensure your code is on `dev` branch
+- **Solution**: Or update the branch in the Jenkinsfile's "Clone Repository" stage
 
 ## 🛑 Stopping Jenkins
 
