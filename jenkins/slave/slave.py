@@ -141,7 +141,6 @@ def slave_run(slave_jar, slave_name):
     return subprocess.Popen(params)
 
 def signal_handler(sig, frame):
-    global process
     if process is not None:
         process.send_signal(signal.SIGINT)
 
