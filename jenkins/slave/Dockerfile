@@ -30,7 +30,7 @@ RUN mkdir -p /home/jenkins
 RUN mkdir -p /var/lib/jenkins
 
 # Start-up script to attach the slave to the master
-ADD slave.py /var/lib/jenkins/slave.py
+COPY slave.py /var/lib/jenkins/slave.py
 
 WORKDIR /home/jenkins
 
