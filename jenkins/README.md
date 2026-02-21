@@ -71,7 +71,11 @@ The configuration is automatically applied when Jenkins starts via the `CASC_JEN
      - **Description**: (optional) e.g., "Docker Hub credentials for image push"
    - Click **"OK"** to save
    
-   **Important**: The credential ID must be exactly `dockerhub-credentials` for the pipeline to work.
+   **Important Notes**:
+   - The credential ID must be exactly `dockerhub-credentials` (case-sensitive) for the pipeline to work
+   - You do **NOT** need to manually select credentials in the pipeline job configuration
+   - The Jenkinsfile automatically uses the credential via `credentials('dockerhub-credentials')` in the environment block
+   - The credential will be automatically bound and available as `${DOCKERHUB_CREDENTIALS_USR}` (username) and `${DOCKERHUB_CREDENTIALS_PSW}` (password) in the pipeline
 
 6. **Create a Pipeline Job**:
    - Click "New Item"
