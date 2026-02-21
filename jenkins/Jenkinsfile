@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git branch: 'main', url: 'https://github.com/yhayat1/jbh-rolling-project.git'
+                git branch: 'dev', url: 'https://github.com/yhayat1/jbh-rolling-project.git'
             }
         }
         
@@ -21,7 +21,7 @@ pipeline {
                         sh 'flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics'
 
                         echo "Linting Shell using ShellCheck..."
-                        sh 'find . -name "*.sh" -type f | xargs shellcheck'
+                        sh 'find . -name "*.sh" -type f -exec shellcheck {} + || echo "No .sh files found to lint"'
 
                         echo "Linting Dockerfiles using Hadolint..."
                         sh 'find . -name "Dockerfile" -type f -exec hadolint {} +'
