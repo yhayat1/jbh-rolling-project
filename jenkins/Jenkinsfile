@@ -24,7 +24,7 @@ pipeline {
                         sh 'find . -name "*.sh" -type f -exec shellcheck {} + || echo "No .sh files found to lint"'
 
                         echo "Linting Dockerfiles using Hadolint..."
-                        sh 'find . -name "Dockerfile" -type f -exec hadolint {} +'
+                        sh 'find . -name "Dockerfile" -type f -exec hadolint --failure-threshold error {} +'
                     }
                 }
                 stage('Security Scan') {
