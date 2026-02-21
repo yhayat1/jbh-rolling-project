@@ -8,6 +8,20 @@ This repository centralizes multiple DevOps topics and provides a complete solut
 jbh-rolling-project/
 ├── terraform/              # Infrastructure as Code
 │   └── aws/               # AWS infrastructure provisioning
+│       ├── main.tf        # Main Terraform configuration
+│       ├── providers.tf   # Provider configurations
+│       ├── outputs.tf     # Output definitions
+│       ├── modules/       # Terraform modules
+│       │   ├── ec2/      # EC2 instance module
+│       │   │   ├── main.tf
+│       │   │   ├── data.tf
+│       │   │   ├── vars.tf
+│       │   │   └── outputs.tf
+│       │   └── security_group/  # Security group module
+│       │       ├── main.tf
+│       │       ├── data.tf
+│       │       ├── vars.tf
+│       │       └── outputs.tf
 │       └── README.md      # Terraform documentation
 ├── python/                # Flask application (local development)
 │   ├── app.py             # Main Flask application
