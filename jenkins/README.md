@@ -157,6 +157,28 @@ Replace `your-dockerhub-username` with your actual Docker Hub username.
 
 ## 🔧 Troubleshooting
 
+**Problem**: `no matching manifest for linux/arm64/v8` error (Apple Silicon/M1/M2 Mac)
+- **Cause**: The instructor's pre-built Docker images (`yanivomc/jenkins-jb-master:1.0` and `yanivomc/jenkins-slave:baseline-2.0`) are only available for AMD64 architecture, not ARM64
+- **Solution**: Add `platform: linux/amd64` to both services in `docker-compose.yml` to force AMD64 emulation:
+  ```yaml
+  services:
+      jenkins:
+          image: yanivomc/jenkins-jb-master:1.0
+          platform: linux/amd64  # Add this line
+          container_name: jenkins
+          # ... rest of config
+      
+      jenkins-slave:
+          build: 
+              context: ./slave
+              platform: linux/amd64  # Add this line for build
+          image: jenkins-jb/slave:2.0
+          platform: linux/amd64  # Add this line for runtime
+          # ... rest of config
+  ```
+- **Note**: This will work on both AMD64 and ARM64 machines. AMD64 machines will run at native speed, while ARM64 machines (like Apple Silicon Macs) will use emulation and may be slower (2-3x), but fully functional
+- **Alternative**: Build images locally for native ARM64 performance (requires modifying Dockerfiles)
+
 **Problem**: Jenkins master won't start
 - **Solution**: Check logs: `docker-compose logs jenkins`
 - **Solution**: Ensure port 8080 is not in use: `lsof -i :8080`
