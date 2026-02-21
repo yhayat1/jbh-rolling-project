@@ -21,7 +21,13 @@ pipeline {
                         sh 'flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics'
 
                         echo "Linting Shell using ShellCheck..."
-                        sh 'find . -name "*.sh" -type f -exec shellcheck {} + || echo "No .sh files found to lint"'
+                        sh '''
+                            if find . -name "*.sh" -type f | grep -q .; then
+                                find . -name "*.sh" -type f -exec shellcheck {} +
+                            else
+                                echo "No .sh files found to lint"
+                            fi
+                        '''
 
                         echo "Linting Dockerfiles using Hadolint..."
                         sh 'find . -name "Dockerfile" -type f -exec hadolint --failure-threshold error {} +'
