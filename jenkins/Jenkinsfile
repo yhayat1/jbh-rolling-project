@@ -1,5 +1,3 @@
-# Jenkins Pipeline for CI/CD Integration
-
 pipeline {
     agent any
     
