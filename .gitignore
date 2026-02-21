@@ -219,3 +219,4 @@ __marimo__/
 
 # Jenkins
 volume/
+jenkins/agent.jar
