@@ -86,7 +86,7 @@ The configuration is automatically applied when Jenkins starts via the `CASC_JEN
      - Definition: "Pipeline script from SCM"
      - SCM: Git
      - Repository URL: `https://github.com/yhayat1/jbh-rolling-project.git`
-     - Branch: `*/dev` (the pipeline is configured to use the `dev` branch)
+     - Branch: `*/main` (the pipeline is configured to use the `main` branch)
      - Script Path: `jenkins/Jenkinsfile`
    - Save
 
@@ -94,7 +94,7 @@ The configuration is automatically applied when Jenkins starts via the `CASC_JEN
    - Click "Build Now" on your pipeline job
    - The pipeline will automatically:
      - Run on the `docker`-labeled slave agent (agent2)
-     - Clone the repository from the `dev` branch
+     - Clone the repository from the `main` branch
      - Execute parallel linting and security scanning
      - Build the Docker image
      - Scan the image with Trivy
@@ -116,7 +116,7 @@ Replace `your-dockerhub-username` with your actual Docker Hub username.
 
 **Pipeline Behavior**:
 - The pipeline runs on the `docker`-labeled slave agent (not the master)
-- Repository is automatically cloned from the `dev` branch
+- Repository is automatically cloned from the `main` branch
 - Linting and security scans run in parallel
 - Security scans (Bandit, Trivy) report issues but don't fail the build (for visibility)
 - All stages must complete successfully for the pipeline to be marked as successful
@@ -185,7 +185,7 @@ Replace `your-dockerhub-username` with your actual Docker Hub username.
 - **Solution**: Verify tools are installed: `docker-compose exec jenkins-slave flake8 --version`
 
 **Problem**: Pipeline checks out wrong branch
-- **Solution**: The Jenkinsfile clones from `dev` branch - ensure your code is on `dev` branch
+- **Solution**: The Jenkinsfile clones from `main` branch - ensure your code is on `main` branch
 - **Solution**: Or update the branch in the Jenkinsfile's "Clone Repository" stage
 
 ## 🛑 Stopping Jenkins

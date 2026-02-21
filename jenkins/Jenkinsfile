@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git branch: 'dev', url: 'https://github.com/yhayat1/jbh-rolling-project.git'
+                git branch: 'main', url: 'https://github.com/yhayat1/jbh-rolling-project.git'
             }
         }
         
