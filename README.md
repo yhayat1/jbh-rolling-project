@@ -1,5 +1,8 @@
 # DevOps Course Project - AWS Infrastructure & Application Deployment
 
+> **Author:** Yossi Hayat &nbsp;·&nbsp; [GitHub @yhayat1](https://github.com/yhayat1) &nbsp;·&nbsp; [LinkedIn](https://www.linkedin.com/in/yossi-hayat-7b872b103/)
+> Final project for the DevOps course.
+
 This repository centralizes multiple DevOps topics and provides a complete solution for AWS infrastructure provisioning, application deployment, and containerization. The project demonstrates Infrastructure as Code (IaC), containerization, and DevOps best practices.
 
 ## 📁 Project Structure
@@ -246,6 +249,16 @@ $env:AWS_DEFAULT_REGION="your-region"
 - Run the application locally or in Docker
 - Set up Jenkins CI/CD pipeline for automated builds and deployments
 - Explore AWS resources through the web dashboard
+
+## 👤 Author
+
+**Yossi Hayat**
+DevOps course final project — designed, built, and documented end-to-end.
+
+- GitHub: [@yhayat1](https://github.com/yhayat1)
+- LinkedIn: [linkedin.com/in/yossi-hayat](https://www.linkedin.com/in/yossi-hayat-7b872b103/)
+
+If this project helped you, feel free to ⭐ the repo.
 
 ## 📜 License
 
